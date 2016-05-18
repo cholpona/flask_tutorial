@@ -1,13 +1,16 @@
 from functools import wraps
 from flask import request, Response
+from tumblelog.models import User
+
 
 
 def check_auth(username, password):
-    """This function is called to check if a username /
-    password combination is valid.
-    """
-    return username == 'admin' and password == 'secret'
-
+	"""fails if no user exist under this username"""
+    user = User.objects.get(username=username)
+    if user == None:
+        return False
+    else:
+        return user.secret == password
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
